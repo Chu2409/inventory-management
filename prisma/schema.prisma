@@ -6,3 +6,111 @@ datasource db {
   provider = "postgresql"
   url      = env("DB_URL")
 }
+
+model User {
+  id        Int    @id @default(autoincrement()) @map("id")
+  dni       String @unique @map("dni")
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+  password  String @map("password")
+
+  @@map("users")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement()) @map("id")
+  name String @unique @map("name")
+
+  sizes          Size[]
+  productMasters ProductMaster[]
+
+  @@map("categories")
+}
+
+model Size {
+  id    Int    @id @default(autoincrement()) @map("id")
+  value String @map("value")
+
+  categoryId Int      @map("category_id")
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  products Product[]
+
+  @@map("sizes")
+}
+
+model Brand {
+  id   Int    @id @default(autoincrement()) @map("id")
+  name String @unique @map("name")
+
+  productMasters ProductMaster[]
+
+  @@map("brands")
+}
+
+enum Gender {
+  HOMBRE
+  MUJER
+  UNISEX
+}
+
+model ProductMaster {
+  id          Int     @id @default(autoincrement()) @map("id")
+  name        String  @map("name")
+  description String? @map("description")
+  gender      Gender? @map("gender")
+
+  brandId    Int?     @map("brand_id")
+  brand      Brand?   @relation(fields: [brandId], references: [id])
+  categoryId Int      @map("category_id")
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  productColors ProductColor[]
+
+  @@map("product_masters")
+}
+
+enum Color {
+  ROJO
+  AZUL
+  AMARILLO
+  VERDE
+  NARANJA
+  MORADO
+  ROSA
+  MARRON
+  NEGRO
+  BLANCO
+  GRIS
+  CELESTE
+  TURQUESA
+  LILA
+  BEIGE
+}
+
+model ProductColor {
+  id     Int      @id @default(autoincrement()) @map("id")
+  code   String   @map("code")
+  color  Color?   @map("color")
+  images String[] @map("images")
+
+  productMasterId Int           @map("product_master_id")
+  productMaster   ProductMaster @relation(fields: [productMasterId], references: [id])
+
+  products Product[]
+
+  @@map("product_colors")
+}
+
+model Product {
+  id    Int   @id @default(autoincrement()) @map("id")
+  price Float @map("price")
+  stock Int   @map("stock")
+
+  productColorId Int          @map("product_color_id")
+  productColor   ProductColor @relation(fields: [productColorId], references: [id])
+  sizeId         Int?         @map("size_id")
+  size           Size?        @relation(fields: [sizeId], references: [id])
+
+  @@map("products")
+}
