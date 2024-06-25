@@ -1,4 +1,4 @@
-import { IRoute } from './types'
+import { IRoute } from '../types/types'
 
 export const routes: IRoute[] = [
   {

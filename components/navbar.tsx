@@ -21,7 +21,7 @@ import {
   SheetTitle,
 } from './ui/sheet'
 
-import { IRoute } from '@/data/types'
+import { IRoute } from '@/types/types'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
