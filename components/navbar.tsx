@@ -24,13 +24,16 @@ import {
 import { IRoute } from '@/types/types'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useState } from 'react'
 
 interface NavbarProps {
   routes: IRoute[]
 }
 
-const Navbar: React.FC<NavbarProps> = ({ routes }) => {
+export const Navbar: React.FC<NavbarProps> = ({ routes }) => {
   const pathname = usePathname()
+
+  const [open, setIsOpen] = useState(false)
 
   return (
     <header className='sticky top-0 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6'>
@@ -56,8 +59,8 @@ const Navbar: React.FC<NavbarProps> = ({ routes }) => {
         ))}
       </nav>
 
-      <Sheet>
-        <SheetTrigger asChild>
+      <Sheet open={open}>
+        <SheetTrigger asChild onClick={() => setIsOpen(true)}>
           <Button variant='outline' size='icon' className='shrink-0 md:hidden'>
             <Menu className='h-5 w-5' />
             <span className='sr-only'>Toggle navigation menu</span>
@@ -86,6 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({ routes }) => {
                     ? 'text-black font-bold dark:text-white '
                     : 'text-muted-foreground',
                 )}
+                onClick={() => setIsOpen(false)}
               >
                 {route.label}
               </Link>
@@ -119,5 +123,3 @@ const Navbar: React.FC<NavbarProps> = ({ routes }) => {
     </header>
   )
 }
-
-export default Navbar

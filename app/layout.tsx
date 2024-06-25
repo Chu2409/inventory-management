@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/navbar'
 import { ToasterProvider } from '@/providers/toast-provider'
 import { routes } from '@/data/routes'
+import { Navbar } from '@/components/navbar'
+import { Container } from '@/components/container'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,7 +23,7 @@ const RootLayout = ({
       <body className={inter.className}>
         <ToasterProvider />
         <Navbar routes={routes} />
-        {children}
+        <Container>{children}</Container>
       </body>
     </html>
   )
