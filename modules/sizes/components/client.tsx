@@ -3,12 +3,11 @@ import { Header } from '@/modules/shared/components/header'
 import { sizesColumns } from './columns'
 import { IFullSize } from '../types'
 import { Filter } from '@/modules/shared/components/filter'
-import { Category } from '@prisma/client'
 import { FilterValue } from '@/modules/shared/types'
 
 interface SizesClientProps {
   sizes: IFullSize[]
-  categories: Category[]
+  categories: FilterValue[]
   categoryId?: number
 }
 
@@ -17,11 +16,6 @@ export const SizesClient: React.FC<SizesClientProps> = ({
   categories,
   categoryId,
 }) => {
-  const values: FilterValue[] = categories.map((category) => ({
-    id: category.id,
-    value: category.name,
-  }))
-
   return (
     <>
       <Header
@@ -32,7 +26,7 @@ export const SizesClient: React.FC<SizesClientProps> = ({
 
       <div className='my-4'>
         <Filter
-          data={values}
+          data={categories}
           baseRoute='/sizes'
           paramKey='categoryId'
           selectedId={categoryId}
