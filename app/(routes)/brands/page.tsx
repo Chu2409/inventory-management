@@ -1,4 +1,4 @@
-import { Header } from '@/components/header'
+import { Header } from '@/modules/shared/components/header'
 
 const BrandsPage = () => {
   return (

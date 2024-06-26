@@ -1,11 +1,26 @@
-import { Header } from '@/components/header'
+import { getCategories } from '@/modules/categories/actions/get-categories'
+import { getSizes } from '@/modules/sizes/actions/get-sizes'
+import { SizesClient } from '@/modules/sizes/components/client'
 
-const SizesPage = () => {
+export const revalidate = 0
+
+const SizesPage = async ({
+  searchParams,
+}: {
+  searchParams: {
+    categoryId: string
+  }
+}) => {
+  const categoryId = Number(searchParams.categoryId) || undefined
+
+  const sizes = await getSizes(categoryId)
+  const categories = await getCategories()
+
   return (
-    <Header
-      title='Tallas/Tamaños'
-      description='Administra las tallas o tamaños para tus productos'
-      buttonLabel='Nuevo Talla/Tamaño'
+    <SizesClient
+      sizes={sizes}
+      categories={categories}
+      categoryId={categoryId}
     />
   )
 }

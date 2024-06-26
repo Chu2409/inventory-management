@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { CircleUser, Menu, Package2 } from 'lucide-react'
 
-import { Button } from './ui/button'
+import { Button } from '../../../components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from './ui/dropdown-menu'
+} from '../../../components/ui/dropdown-menu'
 import {
   SheetTrigger,
   SheetContent,
@@ -19,7 +19,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from './ui/sheet'
+} from '../../../components/ui/sheet'
 
 import { IRoute } from '@/types/types'
 import { usePathname } from 'next/navigation'
@@ -59,8 +59,8 @@ export const Navbar: React.FC<NavbarProps> = ({ routes }) => {
         ))}
       </nav>
 
-      <Sheet open={open}>
-        <SheetTrigger asChild onClick={() => setIsOpen(true)}>
+      <Sheet open={open} onOpenChange={setIsOpen}>
+        <SheetTrigger asChild>
           <Button variant='outline' size='icon' className='shrink-0 md:hidden'>
             <Menu className='h-5 w-5' />
             <span className='sr-only'>Toggle navigation menu</span>

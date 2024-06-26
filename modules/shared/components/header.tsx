@@ -35,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
         </Link>
       </div>
 
-      <Separator className='my-4' />
+      <Separator className='mt-4' />
     </>
   )
 }
