@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <div className='flex items-center justify-between gap-4'>
+      <div className='flex items-center justify-between gap-4 w-full flex-wrap'>
         <Heading title={title} description={description} />
 
         <Link

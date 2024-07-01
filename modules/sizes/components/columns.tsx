@@ -3,6 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { IFullSize } from '../types'
 import { CellActions } from '@/modules/shared/components/cell-actions'
+import { deleteSize } from '../actions/delete-size'
 
 export const sizesColumns: ColumnDef<IFullSize>[] = [
   {
@@ -20,7 +21,7 @@ export const sizesColumns: ColumnDef<IFullSize>[] = [
         <CellActions
           id={row.original.id}
           message='Talla/Tamaño eliminado'
-          onDelete={async () => await Promise.resolve(true)}
+          onDelete={deleteSize}
           errorMessage='Elimine los productos asociados a esta talla/tamaño primero'
           refresh
         />
