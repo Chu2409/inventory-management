@@ -23,13 +23,13 @@ const SizesPage = async ({
   ) {
     redirect('/sizes')
   }
-  const values = categories.map((category) => ({
-    id: category.id,
-    value: category.name,
-  }))
 
   return (
-    <SizesClient sizes={sizes} categories={values} categoryId={categoryId} />
+    <SizesClient
+      sizes={sizes}
+      categories={categories}
+      categoryId={categoryId}
+    />
   )
 }
 

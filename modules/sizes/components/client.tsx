@@ -3,11 +3,12 @@ import { Header } from '@/modules/shared/components/header'
 import { sizesColumns } from './columns'
 import { IFullSize } from '../types'
 import { Filter } from '@/modules/shared/components/filter'
-import { FilterValue } from '@/modules/shared/types'
+import { SizeModal } from './size-modal'
+import { Category } from '@prisma/client'
 
 interface SizesClientProps {
   sizes: IFullSize[]
-  categories: FilterValue[]
+  categories: Category[]
   categoryId?: number
 }
 
@@ -16,6 +17,11 @@ export const SizesClient: React.FC<SizesClientProps> = ({
   categories,
   categoryId,
 }) => {
+  const categoriesValues = categories.map((category) => ({
+    id: category.id,
+    value: category.name,
+  }))
+
   return (
     <>
       <Header
@@ -26,7 +32,7 @@ export const SizesClient: React.FC<SizesClientProps> = ({
 
       <div className='my-4'>
         <Filter
-          data={categories}
+          data={categoriesValues}
           baseRoute='/sizes'
           paramKey='categoryId'
           selectedId={categoryId}
@@ -34,6 +40,8 @@ export const SizesClient: React.FC<SizesClientProps> = ({
           notFoundMessage='No se encontraron categorías'
         />
       </div>
+
+      <SizeModal categories={categories} initialData={sizes[10]} />
 
       <DataTable columns={sizesColumns} data={sizes} />
     </>
