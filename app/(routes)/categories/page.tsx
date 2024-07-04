@@ -1,3 +1,4 @@
+'use client'
 import { Header } from '@/modules/shared/components/header'
 
 const CategoriesPage = () => {
@@ -6,6 +7,7 @@ const CategoriesPage = () => {
       title='Categorías'
       description='Administra las categorías de tus productos'
       buttonLabel='Nuevo Categoría'
+      onButtonClick={() => {}}
     />
   )
 }

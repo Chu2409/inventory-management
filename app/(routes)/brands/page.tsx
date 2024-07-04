@@ -1,3 +1,4 @@
+'use client'
 import { Header } from '@/modules/shared/components/header'
 
 const BrandsPage = () => {
@@ -6,6 +7,7 @@ const BrandsPage = () => {
       title='Marcas'
       description='Administra las marcas de tus productos'
       buttonLabel='Nueva Marca'
+      onButtonClick={() => {}}
     />
   )
 }

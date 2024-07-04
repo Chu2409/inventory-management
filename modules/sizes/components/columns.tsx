@@ -2,8 +2,8 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { IFullSize } from '../types'
-import { CellActions } from '@/modules/shared/components/cell-actions'
 import { deleteSize } from '../actions/delete-size'
+import { SizesCellActions } from './cell-actions'
 
 export const sizesColumns: ColumnDef<IFullSize>[] = [
   {
@@ -18,12 +18,15 @@ export const sizesColumns: ColumnDef<IFullSize>[] = [
     header: 'Acciones',
     cell: ({ row }) => {
       return (
-        <CellActions
-          id={row.original.id}
+        <SizesCellActions
+          size={{
+            id: row.original.id,
+            value: row.original.value,
+            categoryId: row.original.categoryId,
+          }}
           message='Talla/Tamaño eliminado'
           onDelete={deleteSize}
           errorMessage='Elimine los productos asociados a esta talla/tamaño primero'
-          refresh
         />
       )
     },

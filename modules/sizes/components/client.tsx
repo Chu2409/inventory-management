@@ -1,3 +1,5 @@
+'use client'
+
 import { DataTable } from '@/modules/shared/components/data-table'
 import { Header } from '@/modules/shared/components/header'
 import { sizesColumns } from './columns'
@@ -5,6 +7,8 @@ import { IFullSize } from '../types'
 import { Filter } from '@/modules/shared/components/filter'
 import { SizeModal } from './size-modal'
 import { Category } from '@prisma/client'
+import { useEffect, useState } from 'react'
+import { useCategories } from '../hooks/use-categories'
 
 interface SizesClientProps {
   sizes: IFullSize[]
@@ -22,13 +26,24 @@ export const SizesClient: React.FC<SizesClientProps> = ({
     value: category.name,
   }))
 
+  const [isOpen, setIsOpen] = useState(false)
+
+  const setCategories = useCategories((state) => state.setCategories)
+
+  useEffect(() => {
+    setCategories(categories)
+  }, [categories, setCategories])
+
   return (
     <>
       <Header
         title='Tallas/Tamaños'
         description='Administra las tallas o tamaños para tus productos'
         buttonLabel='Nuevo Talla/Tamaño'
+        onButtonClick={() => setIsOpen(true)}
       />
+
+      <SizeModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
       <div className='my-4'>
         <Filter
@@ -40,8 +55,6 @@ export const SizesClient: React.FC<SizesClientProps> = ({
           notFoundMessage='No se encontraron categorías'
         />
       </div>
-
-      <SizeModal categories={categories} initialData={sizes[10]} />
 
       <DataTable columns={sizesColumns} data={sizes} />
     </>
