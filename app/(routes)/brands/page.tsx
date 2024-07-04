@@ -1,15 +1,12 @@
-'use client'
-import { Header } from '@/modules/shared/components/header'
+import { getBrands } from '@/modules/brands/actions/get-brands'
+import { BrandsClient } from '@/modules/brands/components/client'
 
-const BrandsPage = () => {
-  return (
-    <Header
-      title='Marcas'
-      description='Administra las marcas de tus productos'
-      buttonLabel='Nueva Marca'
-      onButtonClick={() => {}}
-    />
-  )
+export const revalidate = 0
+
+const BrandsPage = async () => {
+  const brands = await getBrands()
+
+  return <BrandsClient brands={brands} />
 }
 
 export default BrandsPage

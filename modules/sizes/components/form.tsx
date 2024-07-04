@@ -101,6 +101,7 @@ export const SizeForm: React.FC<SizeFormProps> = ({
               <FormControl>
                 <Input
                   disabled={isLoading}
+                  autoFocus
                   placeholder='Valor de la talla/tamaño'
                   {...field}
                 />

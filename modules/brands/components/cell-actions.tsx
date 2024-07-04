@@ -8,18 +8,18 @@ import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { AlertModal } from '@/modules/shared/components/alert-modal'
 import { Edit, Trash } from 'lucide-react'
-import { Size } from '@prisma/client'
-import { SizeModal } from './modal'
+import { Brand } from '@prisma/client'
+import { BrandModal } from './modal'
 
-interface SizesCellActionsProps {
-  size: Size
+interface BrandsCellActionsProps {
+  brand: Brand
   message: string
   errorMessage?: string
   onDelete: (id: number) => Promise<boolean>
 }
 
-export const SizesCellActions: React.FC<SizesCellActionsProps> = ({
-  size,
+export const BrandsCellActions: React.FC<BrandsCellActionsProps> = ({
+  brand,
   message,
   onDelete,
   errorMessage,
@@ -34,7 +34,7 @@ export const SizesCellActions: React.FC<SizesCellActionsProps> = ({
   const onDeleteClick = async () => {
     try {
       setIsLoading(true)
-      const deleted = await onDelete(size.id)
+      const deleted = await onDelete(brand.id)
 
       if (!deleted) throw new Error()
 
@@ -58,9 +58,9 @@ export const SizesCellActions: React.FC<SizesCellActionsProps> = ({
         <Edit className='h-4 w-4' />
       </Button>
 
-      <SizeModal
+      <BrandModal
         isOpen={isEditOpen}
-        size={size}
+        brand={brand}
         onClose={() => setIsEditOpen(false)}
       />
 
