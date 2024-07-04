@@ -25,6 +25,7 @@ import { IRoute } from '@/types/types'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
+import { signOut } from 'next-auth/react'
 
 interface NavbarProps {
   routes: IRoute[]
@@ -115,7 +116,10 @@ export const Navbar: React.FC<NavbarProps> = ({ routes }) => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem className='cursor-pointer hover:bg-gray-50'>
+          <DropdownMenuItem
+            className='cursor-pointer hover:bg-gray-50'
+            onClick={() => signOut()}
+          >
             Salir
           </DropdownMenuItem>
         </DropdownMenuContent>

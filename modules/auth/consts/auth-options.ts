@@ -7,54 +7,26 @@ import bcrypt from 'bcrypt'
 export const authOptions = {
   providers: [
     Credentials({
-      name: 'credentials',
+      name: 'Credentials',
       credentials: {
         dni: { label: 'Cédula', type: 'text' },
         password: { label: 'Contraseña', type: 'password' },
       },
       async authorize(credentials) {
-        const adminFound = await prisma.user.findUnique({
-          where: {
-            dni: credentials?.dni,
-          },
+        const user = await prisma.user.findUnique({
+          where: { dni: credentials?.dni },
         })
-        if (adminFound) {
-          verify(credentials?.password || '', adminFound.password)
+        if (!user) throw new Error('Usuario no encontrado')
 
-          return {
-            id: adminFound.id,
-            name: adminFound.firstName + ' ' + adminFound.lastName,
-          }
+        verify(credentials?.password || '', user.password)
+
+        return {
+          id: user.id.toString(),
+          name: user.firstName + ' ' + user.lastName,
         }
-
-        throw new Error('Usuario no encontrado')
-
-        // console.log(bcrypt.hashSync('0703224337_store', 10))
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        return {
-          ...token,
-          id: user.id,
-        }
-      }
-
-      return token
-    },
-    async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-          role: token.role,
-        },
-      }
-    },
-  },
   session: {
     strategy: 'jwt',
     maxAge: 28800,
