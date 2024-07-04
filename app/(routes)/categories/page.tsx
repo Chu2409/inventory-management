@@ -1,15 +1,12 @@
-'use client'
-import { Header } from '@/modules/shared/components/header'
+import { getCategories } from '@/modules/categories/actions/get-categories'
+import { CategoriesClient } from '@/modules/categories/components/client'
 
-const CategoriesPage = () => {
-  return (
-    <Header
-      title='Categorías'
-      description='Administra las categorías de tus productos'
-      buttonLabel='Nuevo Categoría'
-      onButtonClick={() => {}}
-    />
-  )
+export const revalidate = 0
+
+const CategoriesPage = async () => {
+  const categories = await getCategories()
+
+  return <CategoriesClient categories={categories} />
 }
 
 export default CategoriesPage

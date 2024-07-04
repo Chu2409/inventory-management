@@ -7,7 +7,7 @@ export const getBrands = async (): Promise<Brand[]> => {
   try {
     const brands = await prisma.brand.findMany({
       orderBy: {
-        id: 'asc',
+        id: 'desc',
       },
     })
 
