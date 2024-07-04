@@ -6,6 +6,7 @@ import {
   productMasters,
   products,
   sizes,
+  users,
 } from './data'
 
 const prisma = new PrismaClient()
@@ -33,6 +34,10 @@ const main = async () => {
 
   await prisma.product.createMany({
     data: products,
+  })
+
+  await prisma.user.createMany({
+    data: users,
   })
 }
 
