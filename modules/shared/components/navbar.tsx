@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({ routes }) => {
   return (
     <header className='sticky z-50 top-0 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6'>
       <nav className='max-md:hidden gap-10 flex flex-row items-center font-medium'>
-        <Link href='#'>
+        <Link href='/products'>
           <Package2 className='h-6 w-6' />
           <span className='sr-only'>Toggle navigation menu</span>
         </Link>

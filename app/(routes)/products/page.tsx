@@ -1,16 +1,7 @@
-'use client'
-
-import { Header } from '@/modules/shared/components/header'
+import { ProductsClient } from '@/modules/products/components/client'
 
 const ProductsPage = () => {
-  return (
-    <Header
-      title='Productos'
-      description='Administra los productos de tu tienda'
-      buttonLabel='Nuevo Producto'
-      onButtonClick={() => {}}
-    />
-  )
+  return <ProductsClient products={[]} />
 }
 
 export default ProductsPage

@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToasterProvider } from '@/providers/toast-provider'
-import { routes } from '@/modules/shared/data/routes'
-import { Navbar } from '@/modules/shared/components/navbar'
-import { Container } from '@/modules/shared/components/container'
+import AuthProvider from '@/providers/auth-provider'
+import { getServerSession } from 'next-auth'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,17 +12,20 @@ export const metadata: Metadata = {
   description: 'A simple inventory management system',
 }
 
-const RootLayout = ({
+const RootLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) => {
+  const session = await getServerSession()
+
   return (
     <html lang='es'>
       <body className={inter.className}>
-        <ToasterProvider />
-        <Navbar routes={routes} />
-        <Container>{children}</Container>
+        <AuthProvider session={session}>
+          <ToasterProvider />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )
