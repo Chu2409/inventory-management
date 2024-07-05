@@ -74,7 +74,7 @@ export const LoginForm = () => {
   }
 
   return (
-    <Card className='w-full max-w-md mx-2'>
+    <Card className='w-full max-w-md mx-2 drop-shadow-2xl'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className=''>
           <CardHeader>
