@@ -2,7 +2,6 @@ import { Color, Gender } from '@prisma/client'
 
 interface ProductMaster {
   name: string
-  description?: string
   gender?: Gender
   brandId?: number
   categoryId: number
@@ -25,21 +24,18 @@ interface Product {
 export const productMasters: ProductMaster[] = [
   {
     name: 'T-shirt',
-    description: 'A simple t-shirt',
     gender: Gender.UNISEX,
     brandId: 1,
     categoryId: 1,
   },
   {
     name: 'Pants',
-    description: 'A simple pants',
     gender: Gender.HOMBRE,
     brandId: 2,
     categoryId: 2,
   },
   {
     name: 'Shoes',
-    description: 'A simple shoes',
     gender: Gender.MUJER,
     brandId: 3,
     categoryId: 3,

@@ -19,9 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DataTablePagination } from '../../shared/components/data-table-pagination'
+import { DataTablePagination } from '../../../shared/components/data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
-import { Option } from './client'
+import { Option } from '../client'
+import { useProductModal } from '../../hooks/use-product-modal'
+import { IFullProduct } from '../../types'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -52,13 +54,21 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   })
 
+  const onOpen = useProductModal((state) => state.onOpen)
+  const setFullProduct = useProductModal((state) => state.setFullProduct)
+
+  const onClick = (fullProduct: IFullProduct) => {
+    onOpen()
+    setFullProduct(fullProduct)
+  }
+
   return (
     <div className='space-y-4 pb-8'>
       <DataTableToolbar table={table} categories={categories} brands={brands} />
 
       <div className='rounded-md border bg-white'>
         <Table>
-          <TableHeader className='p-0'>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -66,7 +76,7 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className='font-bold px-0 text-center'
+                      className='font-bold px-0 text-center py-3'
                     >
                       {header.isPlaceholder
                         ? null
@@ -87,9 +97,14 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  className='cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out'
+                  onClick={() => onClick(row.original as IFullProduct)}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className='px-0 text-center'>
+                    <TableCell
+                      key={cell.id}
+                      className='px-0 text-center py-3.5'
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

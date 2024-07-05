@@ -55,10 +55,9 @@ enum Gender {
 }
 
 model ProductMaster {
-  id          Int     @id @default(autoincrement()) @map("id")
-  name        String  @map("name")
-  description String? @map("description")
-  gender      Gender? @map("gender")
+  id     Int     @id @default(autoincrement()) @map("id")
+  name   String  @map("name")
+  gender Gender? @map("gender")
 
   brandId    Int?     @map("brand_id")
   brand      Brand?   @relation(fields: [brandId], references: [id])

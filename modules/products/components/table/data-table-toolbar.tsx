@@ -6,7 +6,7 @@ import { Table } from '@tanstack/react-table'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { DataTableFilter } from './data-table-filter'
-import { Option } from './client'
+import { Option } from '../client'
 import { Color } from '@prisma/client'
 
 const colors = Object.values(Color).map((color) => ({

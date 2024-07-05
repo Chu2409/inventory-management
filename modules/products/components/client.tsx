@@ -2,9 +2,11 @@
 
 import { Header } from '@/modules/shared/components/header'
 import { Brand, Category } from '@prisma/client'
-import { DataTable } from './data-table'
+import { DataTable } from './table/data-table'
 import { columns } from './columns'
 import { IFullProduct } from '../types'
+import { ProductModal } from './modal'
+import { useProductModal } from '../hooks/use-product-modal'
 
 interface ProductsClientProps {
   products: IFullProduct[]
@@ -32,14 +34,24 @@ export const ProductsClient: React.FC<ProductsClientProps> = ({
     value: brand.id.toString(),
   }))
 
+  const onOpen = useProductModal((state) => state.onOpen)
+  const setFullProduct = useProductModal((state) => state.setFullProduct)
+
+  const onButtonClick = () => {
+    setFullProduct(null)
+    onOpen()
+  }
+
   return (
     <>
       <Header
         title='Productos'
         description='Administra los productos de tu tienda'
         buttonLabel='Nuevo Producto'
-        onButtonClick={() => {}}
+        onButtonClick={onButtonClick}
       />
+
+      <ProductModal />
 
       <DataTable
         data={products}
