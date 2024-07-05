@@ -13,19 +13,27 @@ export const columns: ColumnDef<IFullProduct>[] = [
   },
   {
     accessorKey: 'name',
-    header: 'Nombre',
-    cell: ({ row }) => row.original.productColor.productMaster.name,
+    header: () => <div className='max-lg:hidden'>Nombre</div>,
+    cell: ({ row }) => (
+      <div className='max-lg:hidden'>
+        {row.original.productColor.productMaster.name}
+      </div>
+    ),
   },
   {
     accessorKey: 'color',
     header: 'Color',
-    cell: ({ row }) => row.original.productColor.color,
+    cell: ({ row }) => (
+      <div className='capitalize'>
+        {row.original.productColor.color?.toLowerCase()}
+      </div>
+    ),
     filterFn: (rows, id, value) =>
       value.includes(rows.original.productColor.color),
   },
   {
     accessorKey: 'size',
-    header: 'Tamaño/Talla',
+    header: 'Talla',
     cell: ({ row }) => row.original.size?.value,
   },
   {
@@ -40,8 +48,12 @@ export const columns: ColumnDef<IFullProduct>[] = [
   },
   {
     accessorKey: 'brand',
-    header: 'Marca',
-    cell: ({ row }) => row.original.productColor.productMaster.brand?.name,
+    header: () => <div className='max-lg:hidden'>Marca</div>,
+    cell: ({ row }) => (
+      <div className='max-lg:hidden'>
+        {row.original.productColor.productMaster.brand?.name}
+      </div>
+    ),
     filterFn: (rows, id, value) =>
       value.includes(
         rows.original.productColor.productMaster.brandId?.toString(),
@@ -49,8 +61,12 @@ export const columns: ColumnDef<IFullProduct>[] = [
   },
   {
     accessorKey: 'category',
-    header: 'Categoría',
-    cell: ({ row }) => row.original.productColor.productMaster.category.name,
+    header: () => <div className='max-lg:hidden'>Categoría</div>,
+    cell: ({ row }) => (
+      <div className='max-lg:hidden'>
+        {row.original.productColor.productMaster.category?.name}
+      </div>
+    ),
     filterFn: (rows, id, value) =>
       value.includes(
         rows.original.productColor.productMaster.categoryId?.toString(),

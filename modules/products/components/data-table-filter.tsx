@@ -70,9 +70,9 @@ export function DataTableFilter<TData, TValue>({
                       <Badge
                         variant='secondary'
                         key={option.value}
-                        className='rounded-sm px-1 font-normal'
+                        className='rounded-sm px-1 font-normal capitalize'
                       >
-                        {option.label}
+                        {option.label.toLowerCase()}
                       </Badge>
                     ))
                 )}
@@ -105,7 +105,7 @@ export function DataTableFilter<TData, TValue>({
                         filterValues.length ? filterValues : undefined,
                       )
                     }}
-                    className='cursor-pointer'
+                    className='cursor-pointer capitalize'
                   >
                     <div
                       className={cn(
@@ -118,7 +118,7 @@ export function DataTableFilter<TData, TValue>({
                       <CheckIcon className={cn('h-4 w-4')} />
                     </div>
 
-                    <span>{option.label}</span>
+                    <span>{option.label.toLowerCase()}</span>
                   </CommandItem>
                 )
               })}
