@@ -1,9 +1,12 @@
 'use client'
 
+import * as React from 'react'
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
@@ -16,34 +19,55 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DataTablePagination } from './data-table-pagination'
+import { DataTablePagination } from '../../shared/components/data-table-pagination'
+import { DataTableToolbar } from './data-table-toolbar'
+import { Option } from './client'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  categories: Option[]
+  brands: Option[]
 }
 
-export const DataTable = <TData, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) => {
+  brands,
+  categories,
+}: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  )
+
   const table = useReactTable({
     data,
     columns,
+    state: {
+      columnFilters,
+    },
     getCoreRowModel: getCoreRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   })
 
   return (
-    <div className='pb-8 space-y-4'>
-      <div className='rounded-sm border bg-white'>
+    <div className='space-y-4 pb-8'>
+      <DataTableToolbar table={table} categories={categories} brands={brands} />
+
+      <div className='rounded-md border bg-white'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className='font-bold'>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className='font-bold'
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(

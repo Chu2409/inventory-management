@@ -36,7 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
         </Button>
       </div>
 
-      <Separator className='mt-4' />
+      <Separator className='my-4' />
     </>
   )
 }

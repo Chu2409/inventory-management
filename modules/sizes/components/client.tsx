@@ -45,16 +45,14 @@ export const SizesClient: React.FC<SizesClientProps> = ({
 
       <SizeModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
-      <div className='my-4'>
-        <Filter
-          data={categoriesValues}
-          baseRoute='/sizes'
-          paramKey='categoryId'
-          selectedId={categoryId}
-          placeholder='Selecciona una categoría...'
-          notFoundMessage='No se encontraron categorías'
-        />
-      </div>
+      <Filter
+        data={categoriesValues}
+        baseRoute='/sizes'
+        paramKey='categoryId'
+        selectedId={categoryId}
+        placeholder='Selecciona una categoría...'
+        notFoundMessage='No se encontraron categorías'
+      />
 
       <DataTable columns={sizesColumns} data={sizes} />
     </>

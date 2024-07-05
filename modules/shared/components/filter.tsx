@@ -48,7 +48,7 @@ export const Filter: React.FC<FilterProps> = ({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild className='mb-4'>
         <Button
           variant='outline'
           role='combobox'
