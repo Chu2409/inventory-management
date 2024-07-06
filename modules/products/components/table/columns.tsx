@@ -2,14 +2,14 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 
-import { IFullProduct } from '../types'
+import { IFullProduct } from '../../types'
 
 export const columns: ColumnDef<IFullProduct>[] = [
   {
     accessorKey: 'code',
     header: 'Código',
-    cell: ({ row }) => row.original.productColor.code,
-    accessorFn: (row) => row.productColor.code,
+    cell: ({ row }) => row.original.productColor.productMaster.code,
+    accessorFn: (row) => row.productColor.productMaster.code,
   },
   {
     accessorKey: 'name',

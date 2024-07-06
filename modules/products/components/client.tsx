@@ -3,7 +3,7 @@
 import { Header } from '@/modules/shared/components/header'
 import { Brand, Category } from '@prisma/client'
 import { DataTable } from './table/data-table'
-import { columns } from './columns'
+import { columns } from './table/columns'
 import { IFullProduct } from '../types'
 import { ProductModal } from './modal'
 import { useProductModal } from '../hooks/use-product-modal'

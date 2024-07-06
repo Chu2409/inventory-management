@@ -1,6 +1,7 @@
 import { Color, Gender } from '@prisma/client'
 
 interface ProductMaster {
+  code: string
   name: string
   gender?: Gender
   brandId?: number
@@ -8,7 +9,6 @@ interface ProductMaster {
 }
 
 interface ProductColor {
-  code: string
   color?: Color
   images: string[]
   productMasterId: number
@@ -23,18 +23,21 @@ interface Product {
 
 export const productMasters: ProductMaster[] = [
   {
+    code: 'C21',
     name: 'T-shirt',
     gender: Gender.UNISEX,
     brandId: 1,
     categoryId: 1,
   },
   {
+    code: 'P32',
     name: 'Pants',
     gender: Gender.HOMBRE,
     brandId: 2,
     categoryId: 2,
   },
   {
+    code: 'Z231',
     name: 'Shoes',
     gender: Gender.MUJER,
     brandId: 3,
@@ -44,37 +47,31 @@ export const productMasters: ProductMaster[] = [
 
 export const productColors: ProductColor[] = [
   {
-    code: 'C21',
     color: Color.NEGRO,
     images: [],
     productMasterId: 1,
   },
   {
-    code: 'C32',
     color: Color.BLANCO,
     images: [],
     productMasterId: 1,
   },
   {
-    code: 'P21',
     color: Color.ROJO,
     images: [],
     productMasterId: 2,
   },
   {
-    code: 'P32',
     color: Color.VERDE,
     images: [],
     productMasterId: 2,
   },
   {
-    code: 'Z12',
     color: Color.AZUL,
     images: [],
     productMasterId: 3,
   },
   {
-    code: 'Z231',
     color: Color.AMARILLO,
     images: [],
     productMasterId: 3,

@@ -28,12 +28,6 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { ImageUpload } from './image-upload'
-import {
-  AccordionContent,
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
 
 interface ProductFormProps {
   initialData: IFullProduct | null
