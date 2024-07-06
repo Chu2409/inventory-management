@@ -1,12 +1,14 @@
 'use client'
-import { Size } from '@prisma/client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import { IFullProduct } from '../types'
+import { Brand, Category, Color, Gender } from '@prisma/client'
 import {
   Form,
   FormControl,
@@ -15,6 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -22,139 +26,334 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import toast from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
-import { createSize } from '../actions/create-size'
-import { updateSize } from '../actions/update-size'
-import { useCategories } from '../hooks/use-categories'
+import { Separator } from '@/components/ui/separator'
+import { ImageUpload } from './image-upload'
+import {
+  AccordionContent,
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 interface ProductFormProps {
-  size?: Size
+  initialData: IFullProduct | null
+  categories: Category[]
+  brands: Brand[]
   onClose: () => void
 }
 
-const formSchema = z.object({
-  value: z
+const productMasterFormSchema = z.object({
+  name: z
     .string()
-    .min(1, { message: 'Mínimo 1 caracter' })
-    .max(5, { message: 'Máximo 5 caracteres' }),
+    .min(3, { message: 'Mínimo 3 caracteres' })
+    .max(100, { message: 'Máximo 100 caracteres' }),
+  gender: z.nativeEnum(Gender).nullable(),
+  brandId: z.coerce.number().nullable(),
   categoryId: z.coerce.number().min(1, { message: 'Selecciona una categoría' }),
 })
 
-export const SizeForm: React.FC<ProductFormProps> = ({
-  size,
+const productColorFormSchema = z.object({
+  code: z
+    .string()
+    .min(3, { message: 'Mínimo 3 caracteres' })
+    .max(10, { message: 'Máximo 10 caracteres' }),
+  color: z.nativeEnum(Color).nullable(),
+  images: z.array(z.string()),
+})
+
+const productFormSchema = z.object({
+  price: z.coerce
+    .number({ invalid_type_error: 'Precio inválido' })
+    .positive({ message: 'Precio inválido' })
+    .nonnegative({ message: 'Precio inválido' }),
+  stock: z.coerce
+    .number({ invalid_type_error: 'Precio inválido' })
+    .int({ message: 'Stock inválido' })
+    .nonnegative({ message: 'Stock inválido' }),
+  sizeId: z.coerce.number().optional(),
+})
+
+export const ProductForm: React.FC<ProductFormProps> = ({
+  initialData,
+  brands,
+  categories,
   onClose: onCloseReq,
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const categories = useCategories((state) => state.categories)
+  const productMasterForm = useForm<z.infer<typeof productMasterFormSchema>>({
+    resolver: zodResolver(productMasterFormSchema),
+    // @ts-ignore
+    defaultValues: initialData
+      ? {
+          ...initialData.productColor.productMaster,
+        }
+      : {
+          name: '',
+          gender: null,
+          brandId: null,
+          categoryId: '',
+        },
+  })
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      value: size ? size.value : '',
-      // @ts-ignore
-      categoryId: size ? size.categoryId : '',
-    },
+  const productColorForm = useForm<z.infer<typeof productColorFormSchema>>({
+    resolver: zodResolver(productColorFormSchema),
+    defaultValues: initialData
+      ? {
+          ...initialData.productColor,
+        }
+      : {
+          code: '',
+          color: null,
+          images: [],
+        },
   })
 
   const onClose = () => {
     setIsLoading(false)
-    form.reset()
+    productMasterForm.reset()
     onCloseReq()
   }
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      setIsLoading(true)
+  const onSubmit = async (values: z.infer<typeof productMasterFormSchema>) => {
+    console.log(values)
+  }
 
-      let result
-      if (size) result = await updateSize({ id: size.id, data: values })
-      else result = await createSize(values)
-
-      if (!result) throw new Error()
-
-      router.refresh()
-      toast.success(size ? 'Talla/Tamaño actualizada' : 'Talla/Tamaño creada')
-    } catch (error) {
-      toast.error('Algo salió mal, intenta de nuevo')
-    } finally {
-      onClose()
-    }
+  const onSubmit1 = async (values: z.infer<typeof productColorFormSchema>) => {
+    console.log(values)
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='flex gap-4 flex-col'
-      >
-        <FormField
-          control={form.control}
-          name='value'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Valor</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={isLoading}
-                  autoFocus
-                  placeholder='Valor de la talla/tamaño'
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='categoryId'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Categoría</FormLabel>
-              <FormControl>
-                <Select
-                  disabled={isLoading}
-                  // eslint-disable-next-line react/jsx-handler-names
-                  onValueChange={field.onChange}
-                  value={field.value.toString()}
-                  defaultValue={field.value.toString()}
-                >
-                  <SelectTrigger>
-                    <SelectValue
-                      defaultValue={field.value}
-                      placeholder='Selecciona una categoría'
+    <>
+      <Form {...productMasterForm}>
+        <form onSubmit={productMasterForm.handleSubmit(onSubmit)}>
+          <div className='grid gap-x-4 gap-y-2 md:grid-cols-2'>
+            <FormField
+              control={productMasterForm.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nombre</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isLoading}
+                      autoFocus
+                      className='h-8'
+                      placeholder='Nombre del producto'
+                      {...field}
                     />
-                  </SelectTrigger>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem
-                        key={category.id.toString()}
-                        value={category.id.toString()}
-                        className='cursor-pointer'
-                      >
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
+            <FormField
+              control={productMasterForm.control}
+              name='brandId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Marca</FormLabel>
+                  <FormControl>
+                    <Select
+                      disabled={isLoading}
+                      // eslint-disable-next-line react/jsx-handler-names
+                      onValueChange={field.onChange}
+                      value={field.value?.toString()}
+                    >
+                      <SelectTrigger className='h-8'>
+                        <SelectValue placeholder='Selecciona una marca' />
+                      </SelectTrigger>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                      <SelectContent className='max-h-52'>
+                        {brands.map((brand) => (
+                          <SelectItem
+                            key={brand.id}
+                            value={brand.id.toString()}
+                            className='cursor-pointer h-7'
+                          >
+                            {brand.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Button type='submit' disabled={isLoading}>
-          {size ? 'Actualizar' : 'Agregar'}
-        </Button>
-      </form>
-    </Form>
+            <FormField
+              control={productMasterForm.control}
+              name='gender'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Género</FormLabel>
+                  <FormControl>
+                    <Select
+                      disabled={isLoading}
+                      // eslint-disable-next-line react/jsx-handler-names
+                      onValueChange={field.onChange}
+                      value={field.value || undefined}
+                    >
+                      <SelectTrigger className='h-8'>
+                        <SelectValue placeholder='Selecciona una género' />
+                      </SelectTrigger>
+
+                      <SelectContent className='max-h-52'>
+                        {Object.values(Gender).map((gender) => (
+                          <SelectItem
+                            key={gender}
+                            value={gender}
+                            className='cursor-pointer h-7 capitalize'
+                          >
+                            {gender.toLowerCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={productMasterForm.control}
+              name='categoryId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categoría</FormLabel>
+                  <FormControl>
+                    <Select
+                      disabled={isLoading}
+                      // eslint-disable-next-line react/jsx-handler-names
+                      onValueChange={field.onChange}
+                      value={field.value.toString()}
+                    >
+                      <SelectTrigger className='h-8'>
+                        <SelectValue placeholder='Selecciona una categoría' />
+                      </SelectTrigger>
+
+                      <SelectContent className='max-h-52'>
+                        {categories.map((category) => (
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                            className='cursor-pointer h-7'
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* <Button type='submit' disabled={isLoading}>
+          {initialData ? 'Actualizar' : 'Agregar'}
+        </Button> */}
+        </form>
+      </Form>
+
+      <Separator className='my-4' />
+
+      <Form {...productColorForm}>
+        <form onSubmit={productColorForm.handleSubmit(onSubmit1)}>
+          <div className='grid gap-x-4 gap-y-2 md:grid-cols-2'>
+            <FormField
+              control={productColorForm.control}
+              name='code'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Código</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isLoading}
+                      placeholder='Código del producto'
+                      className='h-8'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={productColorForm.control}
+              name='color'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <Select
+                      disabled={isLoading}
+                      // eslint-disable-next-line react/jsx-handler-names
+                      onValueChange={field.onChange}
+                      value={field.value || undefined}
+                    >
+                      <SelectTrigger className='h-8'>
+                        <SelectValue placeholder='Selecciona un color' />
+                      </SelectTrigger>
+
+                      <SelectContent className='max-h-52'>
+                        {Object.values(Color).map((color) => (
+                          <SelectItem
+                            key={color}
+                            value={color}
+                            className='cursor-pointer h-7 capitalize'
+                          >
+                            {color.toLowerCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={productColorForm.control}
+              name='images'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Imágenes</FormLabel>
+                  <FormControl className='z-auto'>
+                    <ImageUpload
+                      imagesUrl={field.value}
+                      isDisabled={isLoading}
+                      onChange={(url) =>
+                        field.onChange([...field.value, { url }])
+                      }
+                      onRemove={(url) =>
+                        field.onChange([
+                          ...field.value.filter((current) => current !== url),
+                        ])
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* <Button type='submit' disabled={isLoading}>
+            {initialData ? 'Actualizar' : 'Agregar'}
+          </Button> */}
+        </form>
+      </Form>
+
+      <Separator className='my-4' />
+    </>
   )
 }

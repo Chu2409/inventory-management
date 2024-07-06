@@ -46,37 +46,37 @@ export const productColors: ProductColor[] = [
   {
     code: 'C21',
     color: Color.NEGRO,
-    images: ['https://via.placeholder.com/150?text=Black'],
+    images: [],
     productMasterId: 1,
   },
   {
     code: 'C32',
     color: Color.BLANCO,
-    images: ['https://via.placeholder.com/150?text=White'],
+    images: [],
     productMasterId: 1,
   },
   {
     code: 'P21',
     color: Color.ROJO,
-    images: ['https://via.placeholder.com/150?text=Red'],
+    images: [],
     productMasterId: 2,
   },
   {
     code: 'P32',
     color: Color.VERDE,
-    images: ['https://via.placeholder.com/150?text=Green'],
+    images: [],
     productMasterId: 2,
   },
   {
     code: 'Z12',
     color: Color.AZUL,
-    images: ['https://via.placeholder.com/150?text=Blue'],
+    images: [],
     productMasterId: 3,
   },
   {
     code: 'Z231',
     color: Color.AMARILLO,
-    images: ['https://via.placeholder.com/150?text=Yellow'],
+    images: [],
     productMasterId: 3,
   },
 ]

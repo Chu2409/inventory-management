@@ -51,7 +51,7 @@ export const ProductsClient: React.FC<ProductsClientProps> = ({
         onButtonClick={onButtonClick}
       />
 
-      <ProductModal />
+      <ProductModal categories={categories} brands={brands} />
 
       <DataTable
         data={products}
