@@ -1,12 +1,12 @@
 import { create } from 'zustand'
-import { IFullProduct } from '../types'
+import { IProduct } from '../types'
 
 interface ProductModalState {
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
-  fullProduct: IFullProduct | null
-  setFullProduct: (fullProduct: IFullProduct | null) => void
+  fullProduct: IProduct | null
+  setFullProduct: (fullProduct: IProduct | null) => void
 }
 export const useProductModal = create<ProductModalState>((set) => ({
   isOpen: false,

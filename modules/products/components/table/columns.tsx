@@ -2,9 +2,9 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 
-import { IFullProduct } from '../../types'
+import { IProduct } from '../../types'
 
-export const columns: ColumnDef<IFullProduct>[] = [
+export const columns: ColumnDef<IProduct>[] = [
   {
     accessorKey: 'code',
     header: 'Código',

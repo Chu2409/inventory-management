@@ -1,8 +1,3 @@
-import * as React from 'react'
-import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons'
-import { Column } from '@tanstack/react-table'
-
-import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,7 +7,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from '@/components/ui/command'
 import {
   Popover,
@@ -20,52 +14,57 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { Option } from '@/modules/shared/types'
+import { cn } from '@/lib/utils'
+import { PlusCircledIcon } from '@radix-ui/react-icons'
+import { CheckIcon } from 'lucide-react'
+import { Option } from '../types'
 
-interface DataTableFilterProps<TData, TValue> {
-  column?: Column<TData, TValue>
-  title?: string
+interface MultiSelectorProps {
+  title: string
+  values: string[]
   options: Option[]
+  onChange: (value: string) => void
+  onRemove: (value: string) => void
 }
 
-export function DataTableFilter<TData, TValue>({
-  column,
+export const MultiSelector: React.FC<MultiSelectorProps> = ({
   title,
+  values,
   options,
-}: DataTableFilterProps<TData, TValue>) {
-  const selectedValues = new Set(column?.getFilterValue() as string[])
-
+  onChange,
+  onRemove,
+}) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant='outline'
           size='sm'
-          className='h-8 bg-white border border-black border-opacity-20'
+          className='h-8 bg-white border border-black border-opacity-20 w-full'
         >
           <PlusCircledIcon className='mr-2 h-4 w-4' />
           {title}
 
-          {selectedValues?.size > 0 && (
+          {values?.length > 0 && (
             <>
               <Separator orientation='vertical' className='mx-2 h-4' />
               <Badge
                 variant='secondary'
                 className='rounded-sm px-1 font-normal lg:hidden'
               >
-                {selectedValues.size}
+                {values.length}
               </Badge>
               <div className='hidden space-x-1 lg:flex'>
-                {selectedValues.size > 2 ? (
+                {values.length > 2 ? (
                   <Badge
                     variant='secondary'
                     className='rounded-sm px-1 font-normal'
                   >
-                    {selectedValues.size} seleccionados
+                    {values.length} seleccionados
                   </Badge>
                 ) : (
                   options
-                    .filter((option) => selectedValues.has(option.value))
+                    .filter((option) => values.includes(option.value))
                     .map((option) => (
                       <Badge
                         variant='secondary'
@@ -82,28 +81,21 @@ export function DataTableFilter<TData, TValue>({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className='w-[200px] p-0 bg-white' align='start'>
-        <Command>
+      <PopoverContent className='p-0 bg-white w-[300px]' align='start'>
+        <Command className='max-h-52'>
           <CommandInput placeholder={title} />
           <CommandList>
             <CommandEmpty>No hay opciones disponibles</CommandEmpty>
 
             <CommandGroup>
-              {options.map((option) => {
-                const isSelected = selectedValues.has(option.value)
+              {options.map((option, index) => {
+                const isSelected = values.includes(option.value)
                 return (
                   <CommandItem
-                    key={option.value}
+                    key={`${option.value}${index}`}
                     onSelect={() => {
-                      if (isSelected) {
-                        selectedValues.delete(option.value)
-                      } else {
-                        selectedValues.add(option.value)
-                      }
-                      const filterValues = Array.from(selectedValues)
-                      column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined,
-                      )
+                      if (isSelected) onRemove(option.value)
+                      else onChange(option.value)
                     }}
                     className='cursor-pointer capitalize'
                   >
@@ -118,25 +110,11 @@ export function DataTableFilter<TData, TValue>({
                       <CheckIcon className={cn('h-4 w-4')} />
                     </div>
 
-                    <span>{option.label.toLowerCase()}</span>
+                    <span>{option.label}</span>
                   </CommandItem>
                 )
               })}
             </CommandGroup>
-
-            {selectedValues.size > 0 && (
-              <>
-                <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem
-                    onSelect={() => column?.setFilterValue(undefined)}
-                    className='justify-center text-center cursor-pointer'
-                  >
-                    Limpiar filtro
-                  </CommandItem>
-                </CommandGroup>
-              </>
-            )}
           </CommandList>
         </Command>
       </PopoverContent>

@@ -4,19 +4,15 @@ import { Header } from '@/modules/shared/components/header'
 import { Brand, Category } from '@prisma/client'
 import { DataTable } from './table/data-table'
 import { columns } from './table/columns'
-import { IFullProduct } from '../types'
+import { IProduct } from '../types'
 import { ProductModal } from './modal'
 import { useProductModal } from '../hooks/use-product-modal'
+import { Option } from '@/modules/shared/types'
 
 interface ProductsClientProps {
-  products: IFullProduct[]
+  products: IProduct[]
   categories: Category[]
   brands: Brand[]
-}
-
-export interface Option {
-  label: string
-  value: string
 }
 
 export const ProductsClient: React.FC<ProductsClientProps> = ({

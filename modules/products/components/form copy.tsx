@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import { IFullProduct } from '../types'
+import { IProduct } from '../types'
 import { Brand, Category, Color, Gender } from '@prisma/client'
 import {
   Form,
@@ -30,7 +30,7 @@ import { Separator } from '@/components/ui/separator'
 import { ImageUpload } from './image-upload'
 
 interface ProductFormProps {
-  initialData: IFullProduct | null
+  initialData: IProduct | null
   categories: Category[]
   brands: Brand[]
   onClose: () => void

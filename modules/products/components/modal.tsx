@@ -3,7 +3,7 @@
 import { Modal } from '@/modules/shared/components/modal'
 import { useProductModal } from '../hooks/use-product-modal'
 import { Brand, Category } from '@prisma/client'
-import { ProductForm } from './form'
+import { ProductBulkForm } from './bulk-form'
 
 interface ProductModalProps {
   categories: Category[]
@@ -28,8 +28,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       onClose={onClose}
       className='md:max-w-2xl max-w-md'
     >
-      <ProductForm
-        initialData={fullProduct}
+      <ProductBulkForm
         brands={brands}
         categories={categories}
         onClose={onClose}

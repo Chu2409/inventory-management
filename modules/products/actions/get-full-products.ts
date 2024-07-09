@@ -1,9 +1,9 @@
 'use server'
 
 import prisma from '@/lib/prisma'
-import { IFullProduct } from '../types'
+import { IProduct } from '../types'
 
-export const getFullProducts = async (): Promise<IFullProduct[]> => {
+export const getFullProducts = async (): Promise<IProduct[]> => {
   try {
     const products = await prisma.product.findMany({
       include: {
