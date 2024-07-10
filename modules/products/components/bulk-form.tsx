@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useForm } from 'react-hook-form'
-import { Brand, Category, Color, Gender, Size } from '@prisma/client'
+import { Brand, Category, Color, Gender } from '@prisma/client'
 import {
   Form,
   FormControl,
@@ -23,14 +23,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
 import { IProductMasterBulk } from '../types'
 import debounce from 'just-debounce-it'
 import { getProductMasterBulkByCode } from '../actions/get-product-master-bulk-by-code'
 import { MultiSelector } from '@/modules/shared/components/multi-selector'
 import { Button } from '@/components/ui/button'
-import { getSizes } from '@/modules/sizes/actions/get-sizes'
 import { Option } from '@/modules/shared/types'
+import toast from 'react-hot-toast'
+import { createProductBulk } from '../actions/create-products-bulk'
+import { useRouter } from 'next/navigation'
+import { getSizes } from '@/modules/sizes/actions/get-sizes'
 
 interface ProductBulkFormProps {
   categories: Category[]
@@ -51,7 +53,7 @@ const productBulkFormSchema = z.object({
   brandId: z.coerce.number().nullable(),
   categoryId: z.coerce.number().min(1, { message: 'Selecciona una categoría' }),
   colors: z
-    .array(z.string())
+    .array(z.nativeEnum(Color))
     .min(1, { message: 'Seleccione al menos un color' }),
   price: z.coerce
     .number({ invalid_type_error: 'Ingrese un precio válido' })
@@ -71,13 +73,14 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
   categories,
   onClose: onCloseReq,
 }) => {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const [code, setCode] = useState('')
   const [productMaster, setProductMaster] = useState<IProductMasterBulk | null>(
     null,
   )
-  const [sizes, setSizes] = useState<Option[]>([])
+  const [filteredSizes, setFilteredSizes] = useState<Option[]>([])
 
   const productBulkForm = useForm<z.infer<typeof productBulkFormSchema>>({
     resolver: zodResolver(productBulkFormSchema),
@@ -98,7 +101,24 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
   })
 
   const onSubmit = async (values: z.infer<typeof productBulkFormSchema>) => {
-    console.log(values)
+    try {
+      setIsLoading(true)
+
+      const productBulkSuccess = await createProductBulk(
+        values,
+        productMaster?.id,
+      )
+      if (!productBulkSuccess) throw new Error()
+
+      router.refresh()
+      toast.success('Productos creado correctamente')
+    } catch (error) {
+      toast.error('Algo salió mal')
+    } finally {
+      setIsLoading(false)
+      productBulkForm.reset()
+      onCloseReq()
+    }
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,15 +129,8 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
     [],
   )
 
-  const colors = Object.values(Color).filter(
-    (color) =>
-      !productMaster?.productColors.map((pc) => pc.color).includes(color),
-  )
-
   useEffect(() => {
     const fetchProductMaster = async () => {
-      const formValues = productBulkForm.getValues()
-
       const productMaster = await getProductMasterBulkByCode(code)
       if (productMaster != null)
         productBulkForm.reset({
@@ -136,11 +149,15 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
     const fetchSizes = async () => {
       const categoryId =
         Number(productBulkForm.getValues('categoryId')) || undefined
-      const sizes = await getSizes(categoryId)
 
-      setSizes(
-        sizes.map(({ id, value }) => ({ label: value, value: id.toString() })),
-      )
+      if (categoryId) {
+        const sizes = await getSizes(categoryId)
+        const formattedSizes = sizes.map(({ id, value }) => ({
+          label: value,
+          value: id.toString(),
+        }))
+        setFilteredSizes(formattedSizes)
+      }
     }
 
     fetchSizes()
@@ -155,7 +172,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
           onSubmit={productBulkForm.handleSubmit(onSubmit)}
           className='flex flex-col gap-y-8'
         >
-          <div className='grid gap-x-4 gap-y-2 md:grid-cols-2'>
+          <div className='grid gap-x-2 gap-y-2 md:grid-cols-3 grid-cols-2'>
             <FormField
               control={productBulkForm.control}
               name='code'
@@ -167,7 +184,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                       disabled={isLoading}
                       autoFocus
                       className='h-8'
-                      placeholder='Código del producto'
+                      placeholder='Z15'
                       {...field}
                       onChange={(e) => {
                         field.onChange(e)
@@ -190,7 +207,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                     <Input
                       disabled={isLoading}
                       className='h-8'
-                      placeholder='Nombre del producto'
+                      placeholder='Nike Fast'
                       {...field}
                     />
                   </FormControl>
@@ -212,8 +229,8 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                       onValueChange={field.onChange}
                       value={field.value?.toString()}
                     >
-                      <SelectTrigger className='h-8'>
-                        <SelectValue placeholder='Selecciona una marca' />
+                      <SelectTrigger className='h-8 text-left'>
+                        <SelectValue placeholder='Seleccione...' />
                       </SelectTrigger>
 
                       <SelectContent className='max-h-52'>
@@ -247,8 +264,8 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                       onValueChange={field.onChange}
                       value={field.value.toString()}
                     >
-                      <SelectTrigger className='h-8'>
-                        <SelectValue placeholder='Selecciona una categoría' />
+                      <SelectTrigger className='h-8 text-left'>
+                        <SelectValue placeholder='Seleccione...' />
                       </SelectTrigger>
 
                       <SelectContent className='max-h-52'>
@@ -283,8 +300,8 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                       onValueChange={field.onChange}
                       value={field.value || undefined}
                     >
-                      <SelectTrigger className='h-8'>
-                        <SelectValue placeholder='Selecciona un género' />
+                      <SelectTrigger className='h-8 text-left'>
+                        <SelectValue placeholder='Seleccione...' />
                       </SelectTrigger>
 
                       <SelectContent className='max-h-52'>
@@ -314,9 +331,9 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                   <FormControl>
                     <div>
                       <MultiSelector
-                        title='Seleccione los colores'
+                        title='Seleccione...'
                         values={field.value}
-                        options={colors.map((color) => ({
+                        options={Object.values(Color).map((color) => ({
                           value: color,
                           label: color,
                         }))}
@@ -350,9 +367,10 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                   <FormControl>
                     <div>
                       <MultiSelector
-                        title='Selecciona las tallas'
+                        disabled={isLoading || filteredSizes.length === 0}
+                        title='Seleccione...'
                         values={field.value.map((size) => size.toString())}
-                        options={sizes}
+                        options={filteredSizes}
                         onChange={(size) => {
                           const newValue = field.value
                             ? [...field.value, size]

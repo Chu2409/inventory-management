@@ -56,7 +56,7 @@ enum Gender {
 
 model ProductMaster {
   id     Int     @id @default(autoincrement()) @map("id")
-  code   String  @map("code")
+  code   String  @unique @map("code")
   name   String  @map("name")
   gender Gender? @map("gender")
 

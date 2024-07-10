@@ -25,6 +25,7 @@ interface MultiSelectorProps {
   options: Option[]
   onChange: (value: string) => void
   onRemove: (value: string) => void
+  disabled?: boolean
 }
 
 export const MultiSelector: React.FC<MultiSelectorProps> = ({
@@ -33,14 +34,15 @@ export const MultiSelector: React.FC<MultiSelectorProps> = ({
   options,
   onChange,
   onRemove,
+  disabled,
 }) => {
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild disabled={disabled}>
         <Button
           variant='outline'
           size='sm'
-          className='h-8 bg-white border border-black border-opacity-20 w-full'
+          className='h-8 bg-white border border-black border-opacity-20 w-full flex items-center justify-start'
         >
           <PlusCircledIcon className='mr-2 h-4 w-4' />
           {title}
@@ -55,7 +57,7 @@ export const MultiSelector: React.FC<MultiSelectorProps> = ({
                 {values.length}
               </Badge>
               <div className='hidden space-x-1 lg:flex'>
-                {values.length > 2 ? (
+                {/* {values.length > 2 ? (
                   <Badge
                     variant='secondary'
                     className='rounded-sm px-1 font-normal'
@@ -74,14 +76,20 @@ export const MultiSelector: React.FC<MultiSelectorProps> = ({
                         {option.label.toLowerCase()}
                       </Badge>
                     ))
-                )}
+                )} */}
+                <Badge
+                  variant='secondary'
+                  className='rounded-sm px-1 font-normal'
+                >
+                  {values.length}
+                </Badge>
               </div>
             </>
           )}
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className='p-0 bg-white w-[300px]' align='start'>
+      <PopoverContent className='p-0 bg-white w-[200px]' align='start'>
         <Command className='max-h-52'>
           <CommandInput placeholder={title} />
           <CommandList>
