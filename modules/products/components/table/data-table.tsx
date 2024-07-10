@@ -76,7 +76,7 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className='font-bold px-0 text-center py-3'
+                      className='font-bold px-0 text-center py-3 h-min'
                     >
                       {header.isPlaceholder
                         ? null

@@ -5,7 +5,7 @@ import { Brand, Category } from '@prisma/client'
 import { DataTable } from './table/data-table'
 import { columns } from './table/columns'
 import { IProduct } from '../types'
-import { ProductModal } from './modal'
+import { ProductModal } from './form/modal'
 import { useProductModal } from '../hooks/use-product-modal'
 import { Option } from '@/modules/shared/types'
 

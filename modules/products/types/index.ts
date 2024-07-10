@@ -27,10 +27,16 @@ interface IProductBulk extends Product {
   size: Size | null
 }
 
-interface IProductColorBulk extends ProductColor {
+export interface IProductColorBulk extends ProductColor {
   products: IProductBulk[]
 }
 
 export interface IProductMasterBulk extends ProductMaster {
   productColors: IProductColorBulk[]
+}
+
+// Bulk columns type
+export interface IProductTable extends Product {
+  productColor: ProductColor
+  size: Size | null
 }

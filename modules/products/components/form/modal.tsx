@@ -1,8 +1,8 @@
 'use client'
 
 import { Modal } from '@/modules/shared/components/modal'
-import { useProductModal } from '../hooks/use-product-modal'
 import { Brand, Category } from '@prisma/client'
+import { useProductModal } from '../../hooks/use-product-modal'
 import { ProductBulkForm } from './bulk-form'
 
 interface ProductModalProps {
