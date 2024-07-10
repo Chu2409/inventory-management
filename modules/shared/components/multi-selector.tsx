@@ -17,14 +17,17 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { PlusCircledIcon } from '@radix-ui/react-icons'
 import { CheckIcon } from 'lucide-react'
-import { Option } from '../types'
 
+export interface MultiSelectorOption {
+  label: string
+  value: number
+}
 interface MultiSelectorProps {
   title: string
-  values: string[]
-  options: Option[]
-  onChange: (value: string) => void
-  onRemove: (value: string) => void
+  values: number[]
+  options: MultiSelectorOption[]
+  onChange: (value: number) => void
+  onRemove: (value: number) => void
   disabled?: boolean
 }
 
@@ -48,43 +51,15 @@ export const MultiSelector: React.FC<MultiSelectorProps> = ({
           {title}
 
           {values?.length > 0 && (
-            <>
+            <div className='ml-auto flex items-center'>
               <Separator orientation='vertical' className='mx-2 h-4' />
               <Badge
                 variant='secondary'
-                className='rounded-sm px-1 font-normal lg:hidden'
+                className='rounded-sm px-1 font-normal'
               >
                 {values.length}
               </Badge>
-              <div className='hidden space-x-1 lg:flex'>
-                {/* {values.length > 2 ? (
-                  <Badge
-                    variant='secondary'
-                    className='rounded-sm px-1 font-normal'
-                  >
-                    {values.length} seleccionados
-                  </Badge>
-                ) : (
-                  options
-                    .filter((option) => values.includes(option.value))
-                    .map((option) => (
-                      <Badge
-                        variant='secondary'
-                        key={option.value}
-                        className='rounded-sm px-1 font-normal capitalize'
-                      >
-                        {option.label.toLowerCase()}
-                      </Badge>
-                    ))
-                )} */}
-                <Badge
-                  variant='secondary'
-                  className='rounded-sm px-1 font-normal'
-                >
-                  {values.length}
-                </Badge>
-              </div>
-            </>
+            </div>
           )}
         </Button>
       </PopoverTrigger>

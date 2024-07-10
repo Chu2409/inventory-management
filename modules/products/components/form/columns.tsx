@@ -1,20 +1,24 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { IProductTable } from '../../types'
 
-export const productBulkColumns: ColumnDef<IProductTable>[] = [
+export interface IProductColumn {
+  color: string
+  size?: { id: number; value: string }
+  stock: number
+  price: number
+}
+
+export const productBulkColumns: ColumnDef<IProductColumn>[] = [
   {
     accessorKey: 'color',
     header: 'Color',
     cell: ({ row }) => (
-      <div className='capitalize'>
-        {row.original.productColor.color?.toLowerCase()}
-      </div>
+      <div className='capitalize'>{row.original.color.toLowerCase()}</div>
     ),
   },
   {
     accessorKey: 'size',
     header: 'Talla',
-    cell: ({ row }) => row.original.size?.value,
+    cell: ({ row }) => row.original.size?.value || '-',
   },
   {
     accessorKey: 'stock',

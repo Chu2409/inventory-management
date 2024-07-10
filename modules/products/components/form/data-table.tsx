@@ -15,11 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { IProductTable } from '../../types'
+import { IProductColumn } from './columns'
+import { Trash } from 'lucide-react'
 
 interface ProductBulkDataTableProps {
-  columns: ColumnDef<IProductTable>[]
-  data: IProductTable[]
+  columns: ColumnDef<IProductColumn>[]
+  data: IProductColumn[]
 }
 
 export function ProductBulkDataTable({
@@ -68,6 +69,9 @@ export function ProductBulkDataTable({
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
+                <TableCell className='px-0 text-center py-1.5 w-min'>
+                  <Trash className='h-4 w-4 cursor-pointer text-red-800' />
+                </TableCell>
               </TableRow>
             ))
           ) : (

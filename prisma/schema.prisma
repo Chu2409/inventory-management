@@ -90,7 +90,7 @@ enum Color {
 
 model ProductColor {
   id     Int      @id @default(autoincrement()) @map("id")
-  color  Color?   @map("color")
+  color  Color    @map("color")
   images String[] @map("images")
 
   productMasterId Int           @map("product_master_id")

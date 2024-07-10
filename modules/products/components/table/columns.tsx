@@ -25,7 +25,7 @@ export const columns: ColumnDef<IProduct>[] = [
     header: 'Color',
     cell: ({ row }) => (
       <div className='capitalize'>
-        {row.original.productColor.color?.toLowerCase()}
+        {row.original.productColor.color.toLowerCase()}
       </div>
     ),
     filterFn: (rows, id, value) =>

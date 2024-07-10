@@ -9,7 +9,7 @@ interface ProductMaster {
 }
 
 interface ProductColor {
-  color?: Color
+  color: Color
   images: string[]
   productMasterId: number
 }

@@ -36,7 +36,8 @@ export interface IProductMasterBulk extends ProductMaster {
 }
 
 // Bulk columns type
-export interface IProductTable extends Product {
-  productColor: ProductColor
-  size: Size | null
+
+export interface SizesByColor {
+  color: string
+  sizeIds: number[]
 }
