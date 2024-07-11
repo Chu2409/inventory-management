@@ -36,6 +36,7 @@ import { useRouter } from 'next/navigation'
 import { getSizes } from '@/modules/sizes/actions/get-sizes'
 import { IProductColumn, ProductBulkDataTable } from './data-table'
 import { Separator } from '@/components/ui/separator'
+import { createProductBulk } from '../../actions/create-products-bulk'
 
 interface ProductBulkFormProps {
   categories: Category[]
@@ -81,6 +82,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
   const debouncedSetCode = useCallback(
     debounce((code: string) => {
       setCode(code)
+      setIsLoading(false)
     }, 800),
     [],
   )
@@ -128,8 +130,9 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
           }),
         )
         setSizesByColor(sizesByColor)
-      } else {
         setProductMaster(productMaster)
+      } else {
+        setProductMaster(null)
         setProductsTable([])
         setSizesByColor([])
       }
@@ -157,7 +160,6 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
         value: id,
       }))
       setSizesByCategory(formattedSizes)
-      // setProductsTable([]) // Reset products table TODO
 
       if (sizes.length === 0) setSizesByColor([])
 
@@ -172,14 +174,26 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
   const onSubmit = async (values: z.infer<typeof productBulkFormSchema>) => {
     try {
       setIsLoading(true)
+      if (productsTable.length === 0) return toast.error('Ingrese productos')
 
-      console.log(values)
+      const productBulkSuccess = await createProductBulk(
+        {
+          ...values,
+          code: productMaster?.code || values.code,
+          variations: productsTable,
+        },
+        productMaster?.id,
+      )
+      if (!productBulkSuccess) throw new Error()
+
+      productBulkForm.reset()
+      onCloseReq()
+      router.refresh()
+      toast.success('Productos creado correctamente')
     } catch (error) {
       toast.error('Algo salió mal')
     } finally {
       setIsLoading(false)
-      // productBulkForm.reset()
-      // onCloseReq()
     }
   }
 
@@ -199,13 +213,13 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                 <FormLabel>Código</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isLoading}
                     autoFocus
                     className='h-8'
                     placeholder='Z15'
                     {...field}
                     onChange={(e) => {
                       field.onChange(e)
+                      setIsLoading(true)
                       debouncedSetCode(e.target.value)
                     }}
                   />

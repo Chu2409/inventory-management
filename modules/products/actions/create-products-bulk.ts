@@ -1,18 +1,17 @@
 'use server'
 
-import prisma from '@/lib/prisma'
-import { Color, Gender } from '@prisma/client'
+import { Gender } from '@prisma/client'
+import { IProductColumn } from '../components/form/data-table'
+import { handleJustCreateBulk } from './handle-just-create-bulk'
+import { handleFullBulk } from './handle-full-bulk'
 
-interface CreateProductBulkProps {
+export interface CreateProductBulkProps {
   code: string
   name: string
   gender: Gender | null
   brandId: number | null
   categoryId: number
-  price: number
-  stock: number
-  colors: Color[]
-  sizes: number[]
+  variations: IProductColumn[]
 }
 
 export const createProductBulk = async (
@@ -21,49 +20,12 @@ export const createProductBulk = async (
 ): Promise<boolean> => {
   try {
     if (productMasterId) {
-      const productsBulk = data.colors.map(
-        async (color) =>
-          await prisma.productColor.create({
-            data: {
-              color,
-              images: [],
-              productMasterId,
-              products: {
-                create: data.sizes.map((size) => ({
-                  price: data.price,
-                  stock: data.stock,
-                  sizeId: size,
-                })),
-              },
-            },
-          }),
-      )
+      const productsBulk = await handleFullBulk(data, productMasterId)
 
       return !!productsBulk
     }
 
-    const productsBulk = await prisma.productMaster.create({
-      data: {
-        code: data.code.toUpperCase(),
-        name: data.name,
-        gender: data.gender,
-        brandId: data.brandId,
-        categoryId: data.categoryId,
-        productColors: {
-          create: data.colors.map((color) => ({
-            color,
-            images: [],
-            products: {
-              create: data.sizes.map((size) => ({
-                price: data.price,
-                stock: data.stock,
-                sizeId: size,
-              })),
-            },
-          })),
-        },
-      },
-    })
+    const productsBulk = await handleJustCreateBulk(data)
 
     return !!productsBulk
   } catch (error: any) {

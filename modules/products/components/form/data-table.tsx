@@ -98,7 +98,7 @@ export function ProductBulkDataTable({
                 <TableCell
                   className={cn(
                     'px-0 text-center py-1.5',
-                    product.stock.isEdited && 'bg-blue-200 rounded-sm',
+                    product.stock.isEdited && 'bg-blue-200',
                   )}
                 >
                   <div className='w-full flex items-center justify-center'>
@@ -125,7 +125,7 @@ export function ProductBulkDataTable({
                 <TableCell
                   className={cn(
                     'px-0 text-center py-1.5',
-                    product.price.isEdited && 'bg-blue-200 rounded-sm',
+                    product.price.isEdited && 'bg-blue-200',
                   )}
                 >
                   <div className='w-full flex items-center justify-center'>
