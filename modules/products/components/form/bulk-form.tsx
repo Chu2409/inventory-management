@@ -127,8 +127,6 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
               .map((product) => product.size!.id),
           }),
         )
-        // console.log(sizesByColor)
-
         setSizesByColor(sizesByColor)
       } else {
         setProductMaster(productMaster)
@@ -149,6 +147,8 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
   const [sizesByColor, setSizesByColor] = useState<SizesByColor[]>([])
   useEffect(() => {
     const fetchSizes = async () => {
+      setIsLoading(true)
+
       const categoryId = Number(productBulkForm.getValues('categoryId'))
 
       const sizes = await getSizes(categoryId)
@@ -157,8 +157,11 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
         value: id,
       }))
       setSizesByCategory(formattedSizes)
+      // setProductsTable([]) // Reset products table TODO
 
       if (sizes.length === 0) setSizesByColor([])
+
+      setIsLoading(false)
     }
 
     fetchSizes()
@@ -428,7 +431,27 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                 <div className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 invisible'>
                   Variaciones
                 </div>
-                <Button className='h-8'>Agregar variación</Button>
+                <Button
+                  className='h-8'
+                  onClick={() => {
+                    if (
+                      productsTable.some((product) => product.color === color)
+                    )
+                      return
+
+                    const updatedProductsTable = productsTable.concat({
+                      color: color!,
+                      stock: { value: 1 },
+                      price: { value: 30 },
+                      isSaved: false,
+                      toDelete: false,
+                      toEdit: false,
+                    })
+                    setProductsTable(updatedProductsTable)
+                  }}
+                >
+                  Agregar variación
+                </Button>
               </>
             )
           )}

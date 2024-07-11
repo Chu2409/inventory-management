@@ -43,6 +43,11 @@ export const productMasters: ProductMaster[] = [
     brandId: 3,
     categoryId: 3,
   },
+  {
+    code: 'T12',
+    name: 'Tablet',
+    categoryId: 4,
+  },
 ]
 
 export const productColors: ProductColor[] = [
@@ -75,6 +80,16 @@ export const productColors: ProductColor[] = [
     color: Color.AMARILLO,
     images: [],
     productMasterId: 3,
+  },
+  {
+    color: Color.NEGRO,
+    images: [],
+    productMasterId: 4,
+  },
+  {
+    color: Color.AMARILLO,
+    images: [],
+    productMasterId: 4,
   },
 ]
 
@@ -188,5 +203,15 @@ export const products: Product[] = [
     stock: 2,
     productColorId: 6,
     sizeId: 22,
+  },
+  {
+    price: 450,
+    stock: 3,
+    productColorId: 7,
+  },
+  {
+    price: 450,
+    stock: 1,
+    productColorId: 8,
   },
 ]

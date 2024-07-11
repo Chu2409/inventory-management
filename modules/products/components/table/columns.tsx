@@ -34,7 +34,7 @@ export const columns: ColumnDef<IProduct>[] = [
   {
     accessorKey: 'size',
     header: 'Talla',
-    cell: ({ row }) => row.original.size?.value,
+    cell: ({ row }) => row.original.size?.value || 'N/A',
   },
   {
     accessorKey: 'stock',

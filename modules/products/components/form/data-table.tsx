@@ -83,7 +83,7 @@ export function ProductBulkDataTable({
               <TableRow
                 key={`${product.color}${product.size?.id}`}
                 className={cn(
-                  product.isSaved ? '' : 'bg-green-100 hover:bg-green-200',
+                  !product.isSaved && 'bg-green-100 hover:bg-green-200',
                   product.toDelete && 'bg-red-100 hover:bg-red-200',
                 )}
               >
