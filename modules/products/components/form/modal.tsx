@@ -20,9 +20,9 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
   return (
     <Modal
-      title={fullProduct ? 'Editar producto' : 'Nuevo producto'}
+      title={fullProduct ? 'Editar productos' : 'Nuevos productos'}
       description={
-        fullProduct ? 'Edita el producto' : 'Agrega un nuevo producto'
+        fullProduct ? 'Edita el producto' : 'Agrega nuevos productos'
       }
       isOpen={isOpen}
       onClose={onClose}
