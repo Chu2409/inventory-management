@@ -35,8 +35,7 @@ import toast from 'react-hot-toast'
 import { createProductBulk } from '../../actions/create-products-bulk'
 import { useRouter } from 'next/navigation'
 import { getSizes } from '@/modules/sizes/actions/get-sizes'
-import { ProductBulkDataTable } from './data-table'
-import { IProductColumn, productBulkColumns } from './columns'
+import { IProductColumn, ProductBulkDataTable } from './data-table'
 import { Separator } from '@/components/ui/separator'
 
 interface ProductBulkFormProps {
@@ -132,6 +131,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                     value: product.size.value,
                   }
                 : undefined,
+              isMarked: true,
               stock: product.stock,
               price: product.price,
             })),
@@ -443,7 +443,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                   })
                   setProductsTable(updatedProductsTable)
                 }}
-                onRemove={(size) => {}}
+                onRemove={() => {}}
               />
             </>
           ) : (
@@ -459,7 +459,21 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
         </div>
       </div>
 
-      <ProductBulkDataTable columns={productBulkColumns} data={productsTable} />
+      <ProductBulkDataTable
+        data={productsTable}
+        onDelete={(color: string, sizeId?: number) => {
+          const updatedProductsTable = productsTable.filter(
+            (product) => product.color !== color || product.size?.id !== sizeId,
+          )
+          setProductsTable(updatedProductsTable)
+
+          const updatedSizesByColor = sizesByColor.map((size) => ({
+            color: size.color,
+            sizeIds: size.sizeIds.filter((id) => id !== sizeId),
+          }))
+          setSizesByColor(updatedSizesByColor)
+        }}
+      />
 
       <Button type='submit' disabled={isLoading} form='form'>
         Guardar
