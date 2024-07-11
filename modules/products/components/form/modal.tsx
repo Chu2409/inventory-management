@@ -26,7 +26,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       }
       isOpen={isOpen}
       onClose={onClose}
-      className='md:max-w-2xl max-w-md'
+      className='md:max-w-2xl max-w-md max-h-[90vh] overflow-y-auto'
     >
       <ProductBulkForm
         brands={brands}

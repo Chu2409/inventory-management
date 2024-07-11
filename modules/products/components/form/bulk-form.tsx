@@ -32,7 +32,6 @@ import {
 } from '@/modules/shared/components/multi-selector'
 import { Button } from '@/components/ui/button'
 import toast from 'react-hot-toast'
-import { createProductBulk } from '../../actions/create-products-bulk'
 import { useRouter } from 'next/navigation'
 import { getSizes } from '@/modules/sizes/actions/get-sizes'
 import { IProductColumn, ProductBulkDataTable } from './data-table'
@@ -56,20 +55,6 @@ const productBulkFormSchema = z.object({
   gender: z.nativeEnum(Gender).nullable(),
   brandId: z.coerce.number().nullable(),
   categoryId: z.coerce.number().min(1, { message: 'Selecciona una categoría' }),
-  colors: z
-    .array(z.nativeEnum(Color))
-    .min(1, { message: 'Seleccione al menos un color' }),
-  price: z.coerce
-    .number({ invalid_type_error: 'Ingrese un precio válido' })
-    .positive({ message: 'Ingrese un precio válido' })
-    .nonnegative({ message: 'Ingrese un precio válido' }),
-  stock: z.coerce
-    .number({ invalid_type_error: 'Ingrese un stock válido' })
-    .int({ message: 'Ingrese un stock válido' })
-    .nonnegative({ message: 'Ingrese un stock válido' }),
-  sizes: z
-    .array(z.coerce.number())
-    .min(1, { message: 'Seleccione al menos una talla' }),
 })
 
 export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
@@ -86,12 +71,6 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
       brandId: null,
       // @ts-ignore
       categoryId: '',
-      colors: [],
-      // @ts-ignore
-      price: '',
-      // @ts-ignore
-      stock: '',
-      sizes: [],
     },
   })
 
@@ -118,7 +97,6 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
       if (productMaster != null) {
         productBulkForm.reset({
           ...productMaster,
-          price: productMaster.productColors[0].products[0].price,
         })
 
         const productsTable: IProductColumn[] = productMaster.productColors
@@ -131,9 +109,11 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                     value: product.size.value,
                   }
                 : undefined,
-              isMarked: true,
-              stock: product.stock,
-              price: product.price,
+              stock: { value: product.stock },
+              price: { value: product.price },
+              isSaved: true,
+              toDelete: false,
+              toEdit: false,
             })),
           )
           .flat()
@@ -190,20 +170,13 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
     try {
       setIsLoading(true)
 
-      const productBulkSuccess = await createProductBulk(
-        values,
-        productMaster?.id,
-      )
-      if (!productBulkSuccess) throw new Error()
-
-      router.refresh()
-      toast.success('Productos creado correctamente')
+      console.log(values)
     } catch (error) {
       toast.error('Algo salió mal')
     } finally {
       setIsLoading(false)
-      productBulkForm.reset()
-      onCloseReq()
+      // productBulkForm.reset()
+      // onCloseReq()
     }
   }
 
@@ -438,8 +411,11 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                         (item) => item.value === size,
                       )!.label,
                     },
-                    stock: 1,
-                    price: 30,
+                    stock: { value: 1 },
+                    price: { value: 30 },
+                    isSaved: false,
+                    toDelete: false,
+                    toEdit: false,
                   })
                   setProductsTable(updatedProductsTable)
                 }}
@@ -461,23 +437,78 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
 
       <ProductBulkDataTable
         data={productsTable}
-        onDelete={(color: string, sizeId?: number) => {
-          const updatedProductsTable = productsTable.filter(
-            (product) => product.color !== color || product.size?.id !== sizeId,
-          )
-          setProductsTable(updatedProductsTable)
+        onDelete={(isSaved: boolean, color: string, sizeId?: number) => {
+          if (isSaved) {
+            const updatedProductsTable = productsTable.map((product) => {
+              if (product.color === color && product.size?.id === sizeId) {
+                return {
+                  ...product,
+                  toDelete: product.toDelete ? !product.toDelete : true,
+                }
+              }
+              return product
+            })
+            setProductsTable(updatedProductsTable)
+          } else {
+            const updatedSizesByColor = sizesByColor.map((size) => ({
+              color: size.color,
+              sizeIds:
+                size.color === color
+                  ? size.sizeIds.filter((id) => id !== sizeId)
+                  : size.sizeIds,
+            }))
+            setSizesByColor(updatedSizesByColor)
 
-          const updatedSizesByColor = sizesByColor.map((size) => ({
-            color: size.color,
-            sizeIds: size.sizeIds.filter((id) => id !== sizeId),
-          }))
-          setSizesByColor(updatedSizesByColor)
+            const updatedProductsTable = productsTable.filter(
+              (product) =>
+                product.color !== color || product.size?.id !== sizeId,
+            )
+            setProductsTable(updatedProductsTable)
+          }
+        }}
+        onPriceBlur={(
+          isSaved: boolean,
+          value: number,
+          color: string,
+          sizeId?: number,
+        ) => {
+          const updatedProductsTable = productsTable.map((product) => {
+            if (product.color === color && product.size?.id === sizeId) {
+              return {
+                ...product,
+                price: { value, isEdited: !!isSaved },
+                toEdit: !!isSaved,
+              }
+            }
+            return product
+          })
+          setProductsTable(updatedProductsTable)
+        }}
+        onStockBlur={(
+          isSaved: boolean,
+          value: number,
+          color: string,
+          sizeId?: number,
+        ) => {
+          const updatedProductsTable = productsTable.map((product) => {
+            if (product.color === color && product.size?.id === sizeId) {
+              return {
+                ...product,
+                stock: { value, isEdited: !!isSaved },
+                toEdit: !!isSaved,
+              }
+            }
+            return product
+          })
+          setProductsTable(updatedProductsTable)
         }}
       />
 
-      <Button type='submit' disabled={isLoading} form='form'>
-        Guardar
-      </Button>
+      <div className='ml-auto'>
+        <Button type='submit' disabled={isLoading} form='form' className='w-44'>
+          Guardar
+        </Button>
+      </div>
     </div>
   )
 }
