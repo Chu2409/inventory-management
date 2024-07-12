@@ -41,6 +41,8 @@ export const MultiSelector: React.FC<MultiSelectorProps> = ({
   disabled,
   withSearch,
 }) => {
+  console.log(values)
+
   return (
     <Popover>
       <PopoverTrigger asChild disabled={disabled}>

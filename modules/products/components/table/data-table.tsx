@@ -22,7 +22,6 @@ import {
 import { DataTablePagination } from '../../../shared/components/data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
 import { useProductModal } from '../../hooks/use-product-modal'
-import { IProduct } from '../../types'
 import { Option } from '@/modules/shared/types'
 
 interface DataTableProps<TData, TValue> {
@@ -55,11 +54,13 @@ export function DataTable<TData, TValue>({
   })
 
   const onOpen = useProductModal((state) => state.onOpen)
-  const setFullProduct = useProductModal((state) => state.setFullProduct)
+  const setCode = useProductModal((state) => state.setCode)
+  const setColor = useProductModal((state) => state.setColor)
 
-  const onClick = (fullProduct: IProduct) => {
+  const onClick = (code: string, color: string) => {
+    setCode(code)
+    setColor(color)
     onOpen()
-    setFullProduct(fullProduct)
   }
 
   return (
@@ -98,7 +99,14 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                   className='cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out'
-                  onClick={() => onClick(row.original as IProduct)}
+                  onClick={() =>
+                    onClick(
+                      // @ts-ignore
+                      row.original.productColor.productMaster.code,
+                      // @ts-ignore
+                      row.original.productColor.color,
+                    )
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell

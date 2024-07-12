@@ -41,6 +41,8 @@ import { createProductBulk } from '../../actions/create-products-bulk'
 interface ProductBulkFormProps {
   categories: Category[]
   brands: Brand[]
+  code: string | null
+  color: string | null
   onClose: () => void
 }
 
@@ -61,6 +63,8 @@ const productBulkFormSchema = z.object({
 export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
   brands,
   categories,
+  code: codeProp,
+  color: colorProp,
   onClose: onCloseReq,
 }) => {
   const productBulkForm = useForm<z.infer<typeof productBulkFormSchema>>({
@@ -87,7 +91,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
     [],
   )
 
-  const [code, setCode] = useState('')
+  const [code, setCode] = useState(codeProp || '')
   const [productMaster, setProductMaster] = useState<IProductMasterBulk | null>(
     null,
   )
@@ -146,7 +150,10 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
   const [sizesByCategory, setSizesByCategory] = useState<MultiSelectorOption[]>(
     [],
   )
-  const [color, setColor] = useState<Color | null>(null)
+  const [color, setColor] = useState<Color | null>(() => {
+    if (colorProp) return colorProp as Color
+    return null
+  })
   const [sizesByColor, setSizesByColor] = useState<SizesByColor[]>([])
   useEffect(() => {
     const fetchSizes = async () => {
@@ -161,7 +168,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
       }))
       setSizesByCategory(formattedSizes)
 
-      if (sizes.length === 0) setSizesByColor([])
+      if (sizes.length === 0 && colorProp === null) setSizesByColor([])
 
       setIsLoading(false)
     }
