@@ -28,6 +28,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { getUserByDni } from '@/modules/users/actions/get-user-by-dni'
 
 const formSchema = z.object({
   dni: z
@@ -63,9 +64,11 @@ export const LoginForm = () => {
 
       if (res?.error) throw new Error(res?.error)
 
+      const user = await getUserByDni(values.dni)
+
       router.push('/')
       router.refresh()
-      toast.success('Bienvenido!')
+      toast.success(`Bienvenido de vuelta ${user?.firstName}!`)
     } catch (error: any) {
       toast.error(error.message)
     } finally {
