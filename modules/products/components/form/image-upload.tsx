@@ -53,7 +53,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         ))}
       </div>
 
-      <div className='z-50 inset-0 relative'>
+      <div className='z-[60] inset-0 relative'>
         <CldUploadWidget
           onUpload={onUpload}
           uploadPreset='puapxgdr'

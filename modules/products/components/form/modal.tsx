@@ -22,7 +22,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   return (
     <Modal
       title={code ? 'Editar productos' : 'Nuevos productos'}
-      description={code ? 'Edita el producto' : 'Agrega nuevos productos'}
+      description={code ? 'Editar los productos' : 'Agrega nuevos productos'}
       isOpen={isOpen}
       onClose={onClose}
       className='md:max-w-2xl max-w-md max-h-[90vh] overflow-y-auto'

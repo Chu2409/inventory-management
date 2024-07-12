@@ -26,10 +26,7 @@ import {
 import { IProductMasterBulk, SizesByColor } from '../../types'
 import debounce from 'just-debounce-it'
 import { getProductMasterBulkByCode } from '../../actions/get-product-master-bulk-by-code'
-import {
-  MultiSelector,
-  MultiSelectorOption,
-} from '@/modules/shared/components/multi-selector'
+
 import { Button } from '@/components/ui/button'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -37,6 +34,7 @@ import { getSizes } from '@/modules/sizes/actions/get-sizes'
 import { IProductColumn, ProductBulkDataTable } from './data-table'
 import { Separator } from '@/components/ui/separator'
 import { createProductBulk } from '../../actions/create-products-bulk'
+import { MultiSelector, MultiSelectorOption } from '../multi-selector'
 
 interface ProductBulkFormProps {
   categories: Category[]
@@ -297,7 +295,7 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                 <FormLabel>Categoría</FormLabel>
                 <FormControl>
                   <Select
-                    disabled={isLoading}
+                    disabled={isLoading || codeProp != null}
                     // eslint-disable-next-line react/jsx-handler-names
                     onValueChange={field.onChange}
                     value={field.value.toString()}
@@ -477,6 +475,23 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
           )}
         </div>
       </div>
+
+      {/* <Accordion type='single' collapsible className='-mt-3'>
+        <AccordionItem value='item-1'>
+          <AccordionTrigger className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 justify-start gap-x-3'>
+            Imágenes
+          </AccordionTrigger>
+
+          <AccordionContent>
+            <ImageUpload
+              imagesUrl={[]}
+              isDisabled={isLoading}
+              onChange={(url) => {}}
+              onRemove={(url) => {}}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion> */}
 
       <ProductBulkDataTable
         data={productsTable}
