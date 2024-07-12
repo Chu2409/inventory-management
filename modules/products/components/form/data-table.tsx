@@ -117,6 +117,7 @@ export function ProductBulkDataTable({
                         )
                       }}
                       min={0}
+                      max={400}
                       className='max-w-12 text-center p-0 mx-0 h-min bg-transparent border-none disabled:opacity-100'
                     />
                   </div>
@@ -129,7 +130,7 @@ export function ProductBulkDataTable({
                   )}
                 >
                   <div className='w-full flex items-center justify-center'>
-                    <Input
+                    <input
                       type='number'
                       disabled={product.toDelete}
                       defaultValue={product.price.value}
@@ -143,7 +144,10 @@ export function ProductBulkDataTable({
                           product.size?.id,
                         )
                       }}
+                      autoFocus={false}
+                      onKeyDown={(e) => e.preventDefault()}
                       min={0}
+                      max={1000}
                       className='max-w-20 text-center p-0 mx-0 h-min bg-transparent border-none disabled:opacity-100'
                     />
                   </div>
