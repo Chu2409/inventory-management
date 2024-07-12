@@ -213,7 +213,6 @@ export const ProductBulkForm: React.FC<ProductBulkFormProps> = ({
                 <FormLabel>Código</FormLabel>
                 <FormControl>
                   <Input
-                    autoFocus
                     className='h-8'
                     placeholder='Z15'
                     {...field}
