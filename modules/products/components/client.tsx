@@ -31,10 +31,12 @@ export const ProductsClient: React.FC<ProductsClientProps> = ({
   }))
 
   const onOpen = useProductModal((state) => state.onOpen)
-  const setFullProduct = useProductModal((state) => state.setFullProduct)
+  const setCode = useProductModal((state) => state.setCode)
+  const setColor = useProductModal((state) => state.setColor)
 
   const onButtonClick = () => {
-    setFullProduct(null)
+    setCode(null)
+    setColor(null)
     onOpen()
   }
 

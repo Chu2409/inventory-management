@@ -16,19 +16,20 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 }) => {
   const isOpen = useProductModal((state) => state.isOpen)
   const onClose = useProductModal((state) => state.onClose)
-  const fullProduct = useProductModal((state) => state.fullProduct)
+  const code = useProductModal((state) => state.code)
+  const color = useProductModal((state) => state.color)
 
   return (
     <Modal
-      title={fullProduct ? 'Editar productos' : 'Nuevos productos'}
-      description={
-        fullProduct ? 'Edita el producto' : 'Agrega nuevos productos'
-      }
+      title={code ? 'Editar productos' : 'Nuevos productos'}
+      description={code ? 'Edita el producto' : 'Agrega nuevos productos'}
       isOpen={isOpen}
       onClose={onClose}
       className='md:max-w-2xl max-w-md max-h-[90vh] overflow-y-auto'
     >
       <ProductBulkForm
+        code={code}
+        color={color}
         brands={brands}
         categories={categories}
         onClose={onClose}
