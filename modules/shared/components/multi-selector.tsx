@@ -29,6 +29,7 @@ interface MultiSelectorProps {
   onChange: (value: number) => void
   onRemove: (value: number) => void
   disabled?: boolean
+  withSearch?: boolean
 }
 
 export const MultiSelector: React.FC<MultiSelectorProps> = ({
@@ -38,6 +39,7 @@ export const MultiSelector: React.FC<MultiSelectorProps> = ({
   onChange,
   onRemove,
   disabled,
+  withSearch,
 }) => {
   return (
     <Popover>
@@ -64,9 +66,9 @@ export const MultiSelector: React.FC<MultiSelectorProps> = ({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className='p-0 bg-white w-[200px]' align='start'>
-        <Command className='max-h-52'>
-          <CommandInput placeholder={title} />
+      <PopoverContent className='p-0 bg-white w-[200px] -mt-3' align='start'>
+        <Command>
+          {withSearch && <CommandInput placeholder='Buscar' />}
           <CommandList>
             <CommandEmpty>No hay opciones disponibles</CommandEmpty>
 
