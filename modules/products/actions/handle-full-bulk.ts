@@ -74,10 +74,6 @@ export const handleFullBulk = async (
       }
     })
 
-    console.log('toAdd', toAdd)
-    console.log('toEdit', toEdit)
-    console.log('toDelete', toDelete)
-
     return await prisma.$transaction(async (prisma) => {
       if (toAdd.length > 0) {
         toAdd.map(async (productColor) => {
