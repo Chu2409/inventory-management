@@ -10,6 +10,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Inventory Management System',
   description: 'A simple inventory management system',
+  manifest: 'manifest.json',
+  icons: {
+    apple: 'icon.png',
+  },
+  themeColor: '#000000',
 }
 
 const RootLayout = async ({
