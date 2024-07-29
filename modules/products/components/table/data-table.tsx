@@ -23,6 +23,7 @@ import { DataTablePagination } from '../../../shared/components/data-table-pagin
 import { DataTableToolbar } from './data-table-toolbar'
 import { useProductModal } from '../../hooks/use-product-modal'
 import { Option } from '@/modules/shared/types'
+import { Eye } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -88,6 +89,7 @@ export function DataTable<TData, TValue>({
                     </TableHead>
                   )
                 })}
+                <TableHead className='px-0 text-center py-0 h-min' />
               </TableRow>
             ))}
           </TableHeader>
@@ -98,15 +100,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className='cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in-out'
-                  onClick={() =>
-                    onClick(
-                      // @ts-ignore
-                      row.original.productColor.productMaster.code,
-                      // @ts-ignore
-                      row.original.productColor.color,
-                    )
-                  }
+                  className=''
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -119,6 +113,19 @@ export function DataTable<TData, TValue>({
                       )}
                     </TableCell>
                   ))}
+                  <TableCell className='px-0 text-center w-min flex items-center justify-center py-3.5'>
+                    <Eye
+                      className='w-4 h-4 text-gray-600 cursor-pointer hover:text-black'
+                      onClick={() =>
+                        onClick(
+                          // @ts-ignore
+                          row.original.productColor.productMaster.code,
+                          // @ts-ignore
+                          row.original.productColor.color,
+                        )
+                      }
+                    />
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
