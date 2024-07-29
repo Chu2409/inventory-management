@@ -88,7 +88,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
               <FormLabel>Nombre</FormLabel>
               <FormControl>
                 <Input
-                  autoFocus
                   disabled={isLoading}
                   placeholder='Nombre de la categoría'
                   {...field}
