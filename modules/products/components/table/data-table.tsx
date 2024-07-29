@@ -116,7 +116,7 @@ export function DataTable<TData, TValue>({
                   <TableCell className='px-0 text-center w-min flex items-center justify-center py-3.5'>
                     <Eye
                       className='w-4 h-4 text-gray-600 cursor-pointer hover:text-black'
-                      onClick={() =>
+                      onDoubleClick={() =>
                         onClick(
                           // @ts-ignore
                           row.original.productColor.productMaster.code,
