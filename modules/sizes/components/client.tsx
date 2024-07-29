@@ -51,7 +51,6 @@ export const SizesClient: React.FC<SizesClientProps> = ({
         paramKey='categoryId'
         selectedId={categoryId}
         placeholder='Selecciona una categoría...'
-        notFoundMessage='No se encontraron categorías'
       />
 
       <DataTable columns={sizesColumns} data={sizes} />
