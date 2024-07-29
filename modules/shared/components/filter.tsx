@@ -6,9 +6,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
@@ -28,7 +26,6 @@ interface FilterProps {
   paramKey: string
   selectedId?: number
   placeholder?: string
-  notFoundMessage?: string
 }
 
 export const Filter: React.FC<FilterProps> = ({
@@ -37,7 +34,6 @@ export const Filter: React.FC<FilterProps> = ({
   paramKey,
   selectedId,
   placeholder,
-  notFoundMessage,
 }) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -65,15 +61,6 @@ export const Filter: React.FC<FilterProps> = ({
 
       <PopoverContent className='w-64 p-0'>
         <Command>
-          <CommandInput
-            placeholder={placeholder || 'Buscar...'}
-            className='h-10'
-          />
-
-          <CommandEmpty>
-            {notFoundMessage || 'No se encontraron resultados'}
-          </CommandEmpty>
-
           <CommandGroup className='overflow-y-auto max-h-72'>
             <CommandList>
               {data.map((data) => (
