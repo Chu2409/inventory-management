@@ -17,7 +17,7 @@ export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className='flex items-center justify-end gap-x-4 lg:gap-x-6 pb-16'>
+    <div className='flex items-center justify-end gap-x-4 lg:gap-x-6'>
       <div className='flex items-center space-x-2'>
         <p className='text-sm font-medium'>Items por página</p>
         <Select
@@ -30,9 +30,9 @@ export function DataTablePagination<TData>({
             <SelectValue placeholder={table.getState().pagination.pageSize} />
           </SelectTrigger>
 
-          <SelectContent side='bottom' className='absolute'>
-            {[10, 20, 30].map((pageSize) => (
-              <SelectItem key={pageSize} value={`${pageSize}`} className='h-6'>
+          <SelectContent side='top'>
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <SelectItem key={pageSize} value={`${pageSize}`}>
                 {pageSize}
               </SelectItem>
             ))}
