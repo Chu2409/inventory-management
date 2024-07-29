@@ -9,7 +9,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator,
@@ -84,7 +83,6 @@ export function DataTableFilter<TData, TValue>({
 
       <PopoverContent className='w-[200px] p-0 bg-white' align='start'>
         <Command>
-          <CommandInput placeholder={title} />
           <CommandList>
             <CommandEmpty>No hay opciones disponibles</CommandEmpty>
 
