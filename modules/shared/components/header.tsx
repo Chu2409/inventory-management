@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
         <Heading title={title} description={description} />
 
         <Button
-          className='flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-70 cursor-pointer text-center'
+          className='flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-70 cursor-pointer text-center ml-auto'
           // href={`${pathname}/new`}
           onClick={onButtonClick}
         >

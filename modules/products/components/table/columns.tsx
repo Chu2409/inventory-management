@@ -72,6 +72,28 @@ export const columns: ColumnDef<IProduct>[] = [
         rows.original.productColor.productMaster.categoryId?.toString(),
       ),
   },
+  {
+    accessorKey: 'price',
+    header: 'Precio',
+    cell: ({ row }) => row.original.price,
+  },
+  {
+    accessorKey: 'price',
+    header: 'Precio',
+    cell: ({ row }) => row.original.price,
+  },
+
+  {
+    accessorKey: 'price',
+    header: 'Precio',
+    cell: ({ row }) => row.original.price,
+  },
+
+  {
+    accessorKey: 'price',
+    header: 'Precio',
+    cell: ({ row }) => row.original.price,
+  },
   // {
   //   id: 'actions',
   //   cell: ({ row }) => <DataTableRowActions row={row} />,
